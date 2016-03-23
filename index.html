@@ -1,66 +1,531 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>瀑布流布局</title>
-	<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
-	<!-- <link rel="stylesheet" type="text/css" href="stylesheets/css3.css"> -->
 
-    	<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
-	<script type="text/javascript" src="script.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style type="text/css">
+    * {
+        padding: 0;
+        margin: 0;
+    }
+    
+    body {
+        background-color: #000;
+        min-width: 1200px;
+        min-height: 600px;
+        -webkit-font-smoothing: antialiased;
+    }
+    /* 动画样式定义 */
+    
+    @-webkit-keyframes rock {
+        0% {
+            transform: rotate(0deg);
+        }
+        10% {
+            transform: rotate(3deg);
+        }
+        20% {
+            transform: rotate(-3deg);
+        }
+        30% {
+            transform: rotate(2deg);
+        }
+        40% {
+            transform: rotate(-2deg);
+        }
+        50% {
+            transform: rotate(1deg);
+        }
+        60% {
+            transform: rotate(-1deg);
+        }
+        70% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(0deg);
+        }
+    }
+    
+    .main {
+        width: 1200px;
+        height: 600px;
+        background: url(img/bg.jpg) no-repeat;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: -300px 0 0 -600px;
+        overflow: hidden;
+    }
+    
+    .zongzi-box {
+        width: 312px;
+        height: 305px;
+        position: absolute;
+        left: 700px;
+        top: 184px;
+    }
+    
+    .zongzi-box-rock {
+        -webkit-animation: rock 2s infinite;
+    }
+    
+    .zongzi {
+        width: 312px;
+        height: 305px;
+        background: url(img/zz.png);
+        transition: all 1s;
+    }
+    
+    .zongzi-out {
+        opacity: 1;
+        transform: scale(.5);
+    }
+    
+    .shengzi1 {
+        width: 218px;
+        height: 180px;
+        background: url(img/line_1.png);
+        position: absolute;
+        left: 10px;
+        top: 120px;
+        z-index: 999;
+        cursor: pointer;
+    }
+    
+    .shengzi2 {
+        width: 219px;
+        height: 159px;
+        background: url(img/line_2.png);
+        position: absolute;
+        left: 10px;
+        top: 158px;
+    }
+    
+    .shengzi3 {
+        width: 264px;
+        height: 1117px;
+        background: url(img/line_3.png);
+        position: absolute;
+        left: 10px;
+        top: 220px;
+    }
+    
+    .shengzi4 {
+        width: 288px;
+        height: 56px;
+        background: url(img/line_4.png);
+        position: absolute;
+        left: 10px;
+        top: 290px;
+    }
+    
+    .shengzi0 {
+        display: none;
+    }
+    
+    .zongzirou {
+        width: 288px;
+        height: 206px;
+        background: url(img/zzr_1.png);
+        background-size: 288px 206px;
+        position: absolute;
+        left: 50px;
+        top: 34px;
+        z-index: 110;
+        opacity: 0;
+        display: none;
+        transform-origin: center top;
+        transform: scale(.8);
+        transition: all 1s;
+    }
+    
+    .zongzirou-in {
+        opacity: 1;
+        display: block;
+        transform: scale(1);
+    }
+    
+    .zuoye {
+        width: 114px;
+        height: 266px;
+        background: url(img/leaf_left.png);
+        position: absolute;
+        left: 20px;
+        top: -50px;
+        z-index: 99;
+        opacity: 0;
+        transition: all 1s;
+        transform-origin: left bottom;
+    }
+    
+    .zuoye-in {
+        opacity: 1;
+        transform: rotate(-5deg);
+    }
+    
+    .zuoye-out {
+        opacity: 0;
+        transform: rotate(-15deg);
+    }
+    
+    .youye {
+        width: 318px;
+        height: 338px;
+        background: url(img/leaf_right.png);
+        position: absolute;
+        left: 90px;
+        top: -80px;
+        z-index: 111;
+        opacity: 0;
+        transition: all 1s;
+        transform-origin: left bottom;
+        transform: scale(.8);
+    }
+    
+    .youye-in {
+        opacity: 1;
+        transform: rotate(5deg) scale(.8);
+    }
+    
+    .youye-out {
+        opacity: 0;
+        transform: rotate(15deg) scale(.8);
+    }
+    
+    .diye {
+        width: 618px;
+        height: 468px;
+        background: url(img/leaf_expand.png);
+        position: absolute;
+        left: -150px;
+        top: -60px;
+        z-index: 109;
+        opacity: 0;
+        transition: all 1s;
+    }
+    
+    .diye-in {
+        opacity: 1;
+    }
+    
+    .text1 {
+        width: 180px;
+        height: 100px;
+        background: url(img/t_jixiang.png);
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin-left: -70px;
+        margin-top: -50px;
+        z-index: 199;
+        transform-origin: center center;
+        transform: scale(.8);
+        opacity: 0;
+        transition: all 1s;
+    }
+    
+    .text2 {
+        width: 180px;
+        height: 100px;
+        background: url(img/t_ruyi.png);
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin-left: -70px;
+        margin-top: -50px;
+        z-index: 199;
+        transform-origin: center center;
+        transform: scale(.8);
+        opacity: 0;
+        transition: all 1s;
+    }
+    
+    .text-in {
+        opacity: 1;
+    }
+    /* 祝福语文字 */
+    
+    .zhufuyu {
+        position: absolute;
+        width: 400px;
+        height: 370px;
+        left: 180px;
+        top: 140px;
+        font-size: 14px;
+        line-height: 20px;
+        color: #333;
+    }
+    
+    .zhufuyu .caption {
+        width: 400px;
+        height: 240px;
+        background: url(img/caption.png) no-repeat;
+        margin-left: 40px;
+        opacity: 0;
+        transition: all 1s;
+    }
+    
+    .zhufuyu .caption-rock {
+        -webkit-animation: rock 4s infinite;
+    }
+    
+    .zhufuyu .to {
+        width: 400px;
+        margin-top: 10px;
+        margin-left: 40px;
+        opacity: 0;
+        transition: all 1s .5s;
+    }
+    
+    .zhufuyu .message {
+        width: 400px;
+        margin-top: 10px;
+        margin-left: 40px;
+        opacity: 0;
+        transition: all 1s 1s;
+    }
+    
+    .zhufuyu .from {
+        width: 400px;
+        margin-top: 10px;
+        margin-left: 40px;
+        text-align: right;
+        opacity: 0;
+        transition: all 1s 1.5s;
+    }
+    
+    .zhufuyu-in .caption,
+    .zhufuyu-in .to,
+    .zhufuyu-in .message,
+    .zhufuyu-in .from {
+        margin-left: 0;
+        opacity: 1;
+    }
+    /* 粽子肉的视角（旋转） */
+    
+    .c_zongzirou_view_1 {
+        transition: all 0s;
+        background: url(img/zzr_1.png);
+    }
+    
+    .zongzirou-view2 {
+        transition: all 0s;
+        background-image: url(img/zzr_2.png);
+    }
+    
+    .zongzirou-view3 {
+        transition: all 0;
+        background-image: url(img/zzr_3.png);
+    }
+    
+    .zongzirou-view4 {
+        transition: all 0;
+        background-image: url(img/zzr_4.png);
+    }
+    
+    .zongzirou-view0 {
+        transition: all 0s;
+        background-image: url(img/zzr_1.png);
+        /* transform: rotateY(180deg); */
+    }
+    /* 文字的视角 */
+    
+    .text-view0 {
+        transform: scale(.8);
+    }
+    
+    .text-mirror0 {
+        display: none;
+    }
+    
+    .text-view2 {
+        transform: scale(.8) rotateY(30deg) translate(-50px,0) rotate(8deg);
+    }
+    
+    .text-mirror2 {
+        transform: scale(.7) rotateY(70deg) translate(283px,-15px) rotate(-8deg);
+    }
+    
+    .text-view3 {
+        transform: scale(.75) rotateY(49deg) translate(-94px,0) rotate(15deg);
+    }
+    
+    .text-mirror3 {
+        transform: scale(.75) rotateY(49deg) translate(118px,10px) rotate(-15deg);
+    }
+    
+    .text-view4 {
+        transform: scale(.6) rotateY(50deg) translate(-196px,10px) rotate(24deg);
+    }
+    
+    .text-mirror4 {
+        transform: scale(.6) rotateY(30deg) translate(58px,10px) rotate(-5deg);
+    }
+    </style>
 </head>
+
 <body>
-	<div id="main">
-		<div class="box">
-			<div class="pic">
-				<img src="images/1 左耳.jpg">
-			</div>
-		</div>
-		<div class="box">
-			<div class="pic">
-				<img src="images/ab.jpg">
-			</div>
-		</div>
-		<div class="box">
-			<div class="pic">
-				<img src="images/head_pic.png">
-			</div>
-		</div>
-		<div class="box">
-			<div class="pic">
-				<img src="images/2 栀子花开.jpg">
-			</div>
-		</div>
-		<div class="box">
-			<div class="pic">
-				<img src="images/canzhan.png">
-			</div>
-		</div>
-		<div class="box">
-			<div class="pic">
-				<img src="images/1 左耳.jpg">
-			</div>
-		</div>
-		<div class="box">
-			<div class="pic">
-				<img src="images/ab.jpg">
-			</div>
-		</div>
-		<div class="box">
-			<div class="pic">
-				<img src="images/3.jpg">
-			</div>
-		</div>
-		<div class="box">
-			<div class="pic">
-				<img src="images/2 栀子花开.jpg">
-			</div>
-		</div>
-		<div class="box">
-			<div class="pic">
-				<img src="images/head_pic.png">
-			</div>
-		</div>
-	</div>
+    <div class="main">
+        <div class="zongzi-box" id="zongzi-box">
+            <div class="zongzi" id='zongzi'></div>
+            <div class="shengzi1" id='shengzi'></div>
+            <div class="zongzirou" id="zongzirou"></div>
+            <div class="zuoye" id="zuoye"></div>
+            <div class="youye" id="youye"></div>
+            <div class="diye" id="diye"></div>
+            <div class="text1" id="text1"></div>
+            <div class="text2" id="text2"></div>
+        </div>
+        <div class="zhufuyu" id="zhufuyu">
+            <div class="caption" id='caption'></div>
+            <div class="to">小伙伴们</div>
+            <div class="message">在端午节来临之际，祝福</div>
+            <div class="from">娟儿</div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    // 获取DOM对象
+    var g = function(id) {
+            return document.getElementById(id);
+        }
+        // 时间轴对象构造器
+    var Timeline = function() {
+            this.order = [];
+            this.add = function(timeout, func, log) {
+                    this.order.push({
+                        timeout: timeout,
+                        func: func,
+                        log: log
+                    });
+                }
+                // 参数ff支持快进
+            this.start = function(ff) {
+                for (s in this.order) {
+                    (function(me) {
+                        var fn = me.func;
+                        var timeout = me.timeout;
+                        var log = me.log;
+                        Timeout = Math.max(timeout - ff, 0);
+                        setTimeout(fn, timeout);
+                        setTimeout(function() {
+                            console.log('time->', timeout, 'log->', log);
+                        }, timeout);
+                    })(this.order[s])
+                }
+            }
+        }
+        // 初始场景
+    var s1 = new Timeline();
+    // 粽子展开的场景
+    var s2 = new Timeline();
+    // 粽子旋转的场景
+    var s3 = new Timeline();
+
+    s1.add(1, function() {
+        g('zongzi-box').className = 'zongzi-box zongzi-box-rock';
+        g('shengzi').onclick = function() {
+            s2.start();
+            g('shengzi').onclick = function() {}
+        }
+    });
+    // 定义粽子展开的动画
+    s2.add(1, function() {
+        g('zongzi-box').className = 'zongzi-box';
+        g('zhufuyu').className = "zhufuyu zhufuyu-in";
+    });
+    s2.add(100, function() {
+        g('shengzi').className = 'shengzi2';
+    });
+    s2.add(500, function() {
+        g('shengzi').className = 'shengzi3';
+    });
+    s2.add(1000, function() {
+        g('shengzi').className = 'shengzi4';
+        g('caption').className = 'caption caption-rock';
+    });
+    s2.add(1500, function() {
+        g('shengzi').className = 'shengzi0';
+    });
+    s2.add(2000, function() {
+        g('zongzi').className = 'zongzi zongzirou';
+        g('zongzirou').className = 'zongzirou zongzirou-in';
+        g('zuoye').className = 'zuoye zuoye-in';
+        g('youye').className = 'youye youye-in';
+
+        g('text1').className = 'text1 text-in';
+        g('text2').className = 'text1 text-mirror0';
+    });
+    s2.add(3000, function() {
+        g('zuoye').className = 'zuoye zuoye-in zuoye-out';
+        g('youye').className = 'youye youye-in youye-out';
+        g('diye').className = 'diye diye-in';
+        s3.start();
+    });
+    // 粽子托盘旋转定义
+    s3.add(1000, function() {
+        g('zongzirou').className = 'zongzirou zongzirou-in zongzirou-view1';
+    });
+    s3.add(1200, function() {
+        g('zongzirou').className = 'zongzirou zongzirou-in zongzirou-view2';
+        g('text1').className = 'text1 text-in text-view2';
+        g('text2').className = 'text2 text-in text-mirror2';
+    });
+    s3.add(1400, function() {
+        g('zongzirou').className = 'zongzirou zongzirou-in zongzirou-view3';
+        g('text1').className = 'text1 text-in text-view3';
+        g('text2').className = 'text2 text-in text-mirror3';
+    });
+    s3.add(1600, function() {
+        g('zongzirou').className = 'zongzirou zongzirou-in zongzirou-view4';
+        g('text1').className = 'text1 text-in text-view4';
+        g('text2').className = 'text2 text-in text-mirror4';
+    });
+    s3.add(1800, function() {
+        g('zongzirou').className = 'zongzirou zongzirou-in zongzirou-view0';
+        g('text1').className = 'text1 text-in text-mirror0';
+        g('text2').className = 'text2 text-in text-view0';
+    });
+    s3.add(3000, function() {
+        g('zongzirou').className = 'zongzirou zongzirou-in zongzirou-view4';
+        g('text1').className = 'text1 text-in text-view4';
+        g('text2').className = 'text2 text-in text-mirror4';
+    });
+    s3.add(3200, function() {
+        g('zongzirou').className = 'zongzirou zongzirou-in zongzirou-view3';
+        g('text1').className = 'text1 text-in text-view3';
+        g('text2').className = 'text2 text-in text-mirror3';
+    });
+    s3.add(3400, function() {
+        g('zongzirou').className = 'zongzirou zongzirou-in zongzirou-view2';
+        g('text1').className = 'text1 text-in text-view2';
+        g('text2').className = 'text2 text-in text-mirror2';
+    });
+    s3.add(3600, function() {
+        g('zongzirou').className = 'zongzirou zongzirou-in zongzirou-view1';
+        g('text1').className = 'text1 text-in text-view0';
+        g('text2').className = 'text2 text-in text-mirror0 ';
+    });
+    s3.add(5000, function() {
+        s3.start();
+    });
+
+
+    // 图片加载器
+    var imgs = ['img/zzr_2.png', 'img/zzr_3.png', 'img/zzr_4.png'];
+    var imgs_onload = function() {
+        imgs.pop();
+        if (imgs.length == 0) {
+            s1.start();
+        }
+    }
+    for (s in imgs) {
+        var img = new Image;
+        img.onload = imgs_onload;
+        img.src = imgs[s];
+    }
+    </script>
 </body>
+
 </html>
